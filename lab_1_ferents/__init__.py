@@ -1,7 +1,7 @@
 from flask import Flask
 from .routes import main
 
-def create_app(config_name="../config"):
+def create_app(config_name="config"):
     app = Flask(__name__)
     app.config.from_pyfile(config_name)
 
