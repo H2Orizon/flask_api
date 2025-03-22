@@ -43,22 +43,13 @@ async def create_book(request: Request):
         return {"error": "Empty request"}, 400
     try:
         validated_data = book_schema.load(data)
+
+        new_id = max(book["id"] for book in books) + 1 if books else 1
+        validated_data["id"] = new_id
+
+        books.append(validated_data)
         return (validated_data)
     except ValidationError as e:
         return {"error": e.errors()},400
 
-# @main.route("/create_book", methods=["POST"])
-# def create_book():
-#     data = request.get_json()
-#     if not data:
-#         return jsonify({"error": "Empty request"}), 400 
-#     try:
-#         validated_data = book_schema.load(data)
-#         return jsonify(validated_data), 200
-#     except ValidationError as e:
-#         return jsonify({"error": e.errors()}), 400
-
-# @main.errorhandler(404)
-# def page_not_found(error):
-#     return jsonify({"error":"out of range"}),404
     
