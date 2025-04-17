@@ -16,8 +16,12 @@ def get_books():
     books = Book.query.filter(Book.id > last_id).order_by(Book.id).limit(per_page).all()
 
     books_list=[{"id": book.id, "book_name":book.book_name, "author":book.author} for book in books]
+    next_id = books[-1].id if books else None
 
-    return jsonify(books_list), 200
+    return jsonify({
+        "books": books_list,
+        "next_id": next_id
+    }), 200
 
 @main.route("/book/<int:book_id>", methods=["GET"])
 def get_book(book_id):
