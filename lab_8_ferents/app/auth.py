@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.security.utils import get_authorization_scheme_param
 from pydantic import BaseModel
+from typing import Optional
 
 SECRET_KEY = "ggew324109gadbfk1"
 ALGORITHM = "HS256"
@@ -69,3 +71,19 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
         return User(username=username)
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+async def get_optional_user(request: Request) -> Optional[User]:
+    auth: str = request.headers.get("Authorization")
+    if auth:
+        scheme, token = get_authorization_scheme_param(auth)
+        if scheme.lower() != "bearer":
+            return None
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            username = payload.get("sub")
+            if username is None:
+                return None
+            return User(username=username)
+        except JWTError:
+            return None
+    return None
