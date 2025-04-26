@@ -28,9 +28,7 @@ async def get_books(request: Request, book_id: str, current_user: Optional[User]
         obj_id = ObjectId(book_id)
     except InvalidId:
         raise HTTPException(status_code=400, detail="Invalid ObjectId format")
-    
     book = await book_collection.find_one({"_id": obj_id})
-
     if book:
         return book_helper(book)
     else:

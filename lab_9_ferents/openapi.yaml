@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: Books API
+  version: 1.0.0
+paths:
+  /books:
+    get:
+      summary: Get all Books
+      responses:
+        '200':
+          description: Book list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Book'
+              examples:
+                bookExamples:
+                  value:               
+                    - id: "1"
+                      title: "Test"
+                      author: "Test"
+                    - id: "2"
+                      title: "Test2"
+                      author: "Test2"
+
+    post:
+      summary: Create a new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: Book created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+              examples:
+                bookExample:
+                  value:
+                    id: "3"
+                    title: "Test3"
+                    author: "Test3"
+  /books/{book_id}:
+    get:
+      summary: Get a book
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+              examples:
+                bookExample:
+                  value:
+                    id: "1"
+                    title: "Test"
+                    author: "Test"
+    delete:
+      summary: Delete a Book
+      parameters:
+        - in: path
+          name: book_id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delete book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+              examples:
+                bookExample:
+                  value:
+                    id: "1"
+                    title: "Test"
+                    author: "Test"
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
