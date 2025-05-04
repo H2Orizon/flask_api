@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: my_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  app:
+    build: .
+    container_name: lab_10_ferents
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+
+  locust:
+    image: locustio/locust
+    container_name: locust
+    volumes:
+      - ./app/test:/mnt/locust
+    ports:
+      - "8089:8089"
+    working_dir: /mnt/locust
+    command: >
+      -f locustfile.py
+      --host http://app:8080
+    depends_on:
+      - app
+
+volumes:
+  mongo_data:
