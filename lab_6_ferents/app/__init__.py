@@ -18,7 +18,7 @@ def create_app(config_name="../config"):
     app.config.from_pyfile(config_name)
 
     api = Api(app)
-    swager = Swagger(app)
+    swagger = Swagger(app)
 
     from .routes import BookListResource, BookResource
     api.add_resource(BookListResource, "/books", endpoint="books")
@@ -31,4 +31,3 @@ def create_app(config_name="../config"):
     app.register_blueprint(main)
 
     return app
-
